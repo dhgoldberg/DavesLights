@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--<link rel="stylesheet" href="css/jquery.mobile-1.4.3.min.css">
+	<script src="scripts/jquery-1.10.2.min.js"></script>
+	<script src="scripts/jquery.mobile-1.4.3.min.js"></script> -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.css" />
+	<script src="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.js"></script>
+	<link rel="stylesheet" media="screen" type="text/css" href="css/colorpicker.css" />
+	<script type="text/javascript" src="scripts/colorpicker.js"></script>
+	<script type="text/javascript" src="scripts/lightroom.js"></script>
+</head>
+<body>
+
+<div data-role="page" id="pageone">
+	<div data-role="header">
+		<h1>Dave's Lights</h1>
+		<meta id="connectionStatusData" data-value="{{ connected }}">
+		<div id="connectionStatusTrue" style="display:none">
+			<h2>Connected</h2>
+		</div>
+		<div id="connectionStatusFalse" style="display:block">
+			<h2>Disconnected</h2>
+		</div>
+	</div>
+	<div data-role="main" class="ui-content">
+		<div data-role="fieldcontain">
+			<label for="modeDropdown">Mode</label>
+			<select name="mode" id="modeDropdown">
+				{% for modeItem in mode_strings %}
+			    <option value={{ modeItem.index }} {% if modeItem.index == mode %} selected {% endif %}>{{ modeItem.string }}</option>
+			    {% endfor %}
+			</select>
+		</div>
+		<div id="pickerDiv" data-role="fieldcontain" style="display:none;">
+	    	<label for="colorpickerHolder">Color</label>
+	    	<p name="colorpickerHolder" id="colorpickerHolder">
+	    </div>
+		<div id="brightnessDiv" data-role="fieldcontain">
+			<label for="brightness">Brightness:</label>
+		    <input type="range" name="brightness" id="brightness" value={{ pixel_brightness }} min="0" max="255">
+	    </div>
+	    <div id="strobeDiv" data-role="fieldcontain">
+	    	<label for="strobe">Strobe Speed</label>
+	    	<input type="range" name="strobe" id="strobe" value={{ strobe_delay * -1 }} min="-200" max="-1">
+	    </div>
+	   	<div id="spreadDiv" data-role="fieldcontain">
+	    	<label for="spread">Spread Speed</label>
+	    	<input type="range" name="spread" id="spread" value={{ co_spread_delay * -1 }} min="-200" max="-1">
+	    </div>
+	    <div id="rainbowDiv" data-role="fieldcontain">
+	    	<label for="rainbow">Rainbow Speed</label>
+	    	<input type="range" name="rainbow" id="rainbow" value={{ rainbow_delay * -1 }} min="-200" max="-1">
+	    </div>
+
+	</div>
+
+	<div data-role="collapsible">
+		<h2>Advanced</h2>
+
+
+		<div class="ui-corner-all custom-corners">
+			<div class="ui-bar ui-bar-a">
+				<h3>FFT Frequencies</h3>
+				<div id="treblediv" data-role="fieldcontain">
+					<label for="treblefreq">Treble</label>
+					<input type="range" name="treblefreq" id="treblefreq" value={{ treble_freq }} min="3000" max="15000">
+				</div>
+				<div id="middiv" data-role="fieldcontain">
+					<label for="midfreq">Mid</label>
+					<input type="range" name="midfreq" id="midfreq" value={{ mid_freq }} min="400" max="6000">
+				</div>
+				<div id="bassdiv" data-role="fieldcontain">
+					<label for="bassfreq">Bass</label>
+					<input type="range" name="bassfreq" id="bassfreq" value={{ bass_freq }} min="1" max="600">
+				</div>
+			</div>
+
+			<div class="ui-body ui-body-a">
+				<div id="colorchangediv" data-role="fieldcontain">
+					<label for="colorchange">Color change</label>
+					<input type="range" name="colorchange" id="colorchange" value={{ color_change_cutoff }} min="1" max="2000">
+				</div>
+				<div id="mindbdiv" data-role="fieldcontain">
+					<label for="mindb">Min DB</label>
+					<input type="range" name="mindb" id="mindb" value={{ min_db }} min="1" max="100">
+				</div>
+				<div id="maxdbdiv" data-role="fieldcontain">
+					<label for="maxdb">Max DB</label>
+					<input type="range" name="maxdb" id="maxdb" value={{ max_db }} min="1" max="100">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
+{% endautoescape %}

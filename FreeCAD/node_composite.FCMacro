@@ -1,0 +1,125 @@
+import FreeCAD, Draft
+top = 1.9 + 0.125
+bottom = 0
+arm_top = 1.675 + 0.125
+arm_bottom = 1.025 + 0.125
+left = 3.375 #3.875
+right = 7.125 #6.625 
+
+laser_offset = -0.003
+four_forty_tap_hole_radius = (0.089 + laser_offset) / 2.0
+four_forty_clearance_hole_radius = (0.125 + laser_offset) / 2.0
+screw_head_radius = 0.225/2.0
+standoff_radius = four_forty_tap_hole_radius #0.286/2.0 ##.25/2
+edge_clearance = screw_head_radius + .05
+hole_radius = four_forty_tap_hole_radius #screw_head_radius
+mounting_hole_radius = (0.109 + laser_offset) / 2.0
+body_mounting_hole_displacement = 1
+arm_mounting_hole_displacement = 3.0
+v_center = top/2.0
+h_center = 10.5/2.0
+
+pcb_length = 1.3
+pcb_width = 2.25
+pcb_hole_radius = four_forty_tap_hole_radius #0.12598425 / 2
+
+
+####  OUTLINE ####
+
+p0 = FreeCAD.Vector(left, 0, 0)
+p1 = FreeCAD.Vector(right, 0, 0)
+p2 = FreeCAD.Vector(right, arm_bottom, 0)
+p3 = FreeCAD.Vector(10.5, arm_bottom, 0)
+p4 = FreeCAD.Vector(10.5, arm_top, 0)
+p5 = FreeCAD.Vector(right, arm_top, 0)
+p6 = FreeCAD.Vector(right, top, 0)
+p7 = FreeCAD.Vector(left, top, 0)
+p8 = FreeCAD.Vector(left, arm_top, 0)
+p9 = FreeCAD.Vector(0, arm_top, 0)
+p10 = FreeCAD.Vector(0, arm_bottom, 0)
+p11 = FreeCAD.Vector(left, arm_bottom, 0)
+#outline = Draft.makeWire([p0, p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11],closed=True)
+#outline.FilletRadius = 25.4 * 0.002
+#outline.Label = 'outline'
+
+#### BOTTOM HOLES #####
+
+standoff_top_center = FreeCAD.Placement()
+standoff_top_center.Base = ((left+right) / 2, top - edge_clearance, 0)
+
+standoff_bottom_left = FreeCAD.Placement()
+standoff_bottom_left.Base = (left + edge_clearance, bottom + edge_clearance, 0)
+
+standoff_bottom_right = FreeCAD.Placement()
+standoff_bottom_right.Base = (right - edge_clearance, bottom + edge_clearance, 0)
+
+soC = Draft.makeCircle(standoff_radius, standoff_top_center, False)
+soBL = Draft.makeCircle(standoff_radius, standoff_bottom_left, False)
+soBR = Draft.makeCircle(standoff_radius, standoff_bottom_right, False)
+
+soC.Label = 'SO Center'
+soBL.Label = 'soBL'
+soBR.Label = 'soBR'
+
+#### TOP HOLES ####
+
+led_top_left = FreeCAD.Placement()
+led_top_left.Base = (left + edge_clearance, top - edge_clearance, 0)
+
+led_top_right = FreeCAD.Placement()
+led_top_right.Base = (right - edge_clearance, top - edge_clearance, 0)
+
+led_bottom_left = FreeCAD.Placement()
+led_bottom_left.Base = (left + edge_clearance, arm_bottom - (top-arm_top) + edge_clearance, 0)
+
+led_bottom_right = FreeCAD.Placement()
+led_bottom_right.Base = (right - edge_clearance, arm_bottom - (top-arm_top) + edge_clearance, 0)
+
+#ledTL = Draft.makeCircle(hole_radius, led_top_left, False)
+#ledTR = Draft.makeCircle(hole_radius, led_top_right, False)
+#ledBL = Draft.makeCircle(hole_radius, led_bottom_left, False)
+#ledBR = Draft.makeCircle(hole_radius, led_bottom_right, False)
+#
+#ledTL.Label = 'ledTL'
+#ledTR.Label = 'ledTR'
+#ledBL.Label = 'ledBL'
+#ledBR.Label = 'ledBR'
+
+####### PCB #########
+
+pcb_placement = FreeCAD.Placement()
+pcb_placement.Base = (h_center - pcb_width/2.0, v_center-(pcb_length/2.0), 0)
+pcb = Draft.makeRectangle(pcb_width, pcb_length, pcb_placement, False)
+pcb.Label = 'PCB Outline'
+
+pcb_hole1_placement = FreeCAD.Placement()
+pcb_hole1_placement.Base = pcb_placement.Base.add(FreeCAD.Vector(0.55, pcb_length - 0.2, 0))
+pcb_hole2_placement = FreeCAD.Placement()
+pcb_hole2_placement.Base = pcb_placement.Base.add(FreeCAD.Vector(1.70, pcb_length - 0.2, 0))
+pcbL = Draft.makeCircle(pcb_hole_radius, pcb_hole1_placement, False)
+pcbR = Draft.makeCircle(pcb_hole_radius, pcb_hole2_placement, False)
+pcbL.Label = 'PCB Hole L'
+pcbR.Label = 'PCB Hole R'
+
+pcb_rj45_placement = FreeCAD.Placement()
+pcb_rj45_placement.Base = pcb_placement.Base.add(FreeCAD.Vector(-0.3, 0.1, 0))
+rj45 = Draft.makeRectangle(pcb_width+0.6, 0.6, pcb_rj45_placement, False)
+rj45.Label = 'RJ45 Outline'
+
+#####  Mounting Holes  ####
+mounting_hole1_placement = FreeCAD.Placement()
+mounting_hole1_placement.Base = (h_center + body_mounting_hole_displacement, bottom + edge_clearance, 0)
+mounting_hole2_placement = FreeCAD.Placement()
+mounting_hole2_placement.Base = (h_center - body_mounting_hole_displacement, bottom + edge_clearance, 0)
+mounting_hole3_placement = FreeCAD.Placement()
+mounting_hole3_placement.Base = (h_center + arm_mounting_hole_displacement, (arm_top + arm_bottom) / 2.0, 0)
+mounting_hole4_placement = FreeCAD.Placement()
+mounting_hole4_placement.Base = (h_center - arm_mounting_hole_displacement, (arm_top + arm_bottom) / 2.0, 0)
+mhL = Draft.makeCircle(mounting_hole_radius, mounting_hole1_placement, False)
+mhR = Draft.makeCircle(mounting_hole_radius, mounting_hole2_placement, False)
+mhAL = Draft.makeCircle(mounting_hole_radius, mounting_hole3_placement, False)
+mhAR = Draft.makeCircle(mounting_hole_radius, mounting_hole4_placement, False)
+mhL.Label = 'Mounting Hole Left'
+mhR.Label = 'Mounting Hole Right'
+mhAL.Label = 'Mounting Hole Arm Left'
+mhAR.Label = 'Mounting Hole Arm Right'
