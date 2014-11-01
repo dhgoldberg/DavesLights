@@ -163,6 +163,7 @@ void spectrumLoop() {
   static uint8_t a = 0;
   static uint8_t b = 1;
   static uint8_t c = 2;
+  static bool color_change_flag = false;
 
     // Calculate FFT if a full sample is available.
   if (fft.available()) {
@@ -189,9 +190,12 @@ void spectrumLoop() {
 
     if(MODE == CO_ALL){
       if( rgb[0] > COLOR_CHANGE_CUTOFF){
+        color_change_flag = true;
+      } else if (color_change_flag && (rgb[0] < 10)){
         a = (a + 1) % 3;
         b = (b + 1) % 3;
         c = (c + 1) % 3;
+        color_change_flag = false;
       }
 
       for( int j = 0; j < NEO_PIXEL_COUNT; ++j){
@@ -367,7 +371,7 @@ void firstTime(){
   EEPROM_writeAnything(CO_SPREAD_DELAY_ADDR, (int) 10);
   EEPROM_writeAnything(STROBE_DELAY_ADDR, (int) 75);
   EEPROM_writeAnything(MODE_ADDR, RAINBOW_ALL);
-  EEPROM_writeAnything(COLOR_CHANGE_CUTOFF_ADDR, 750);
+  EEPROM_writeAnything(COLOR_CHANGE_CUTOFF_ADDR, 200);
 }
 
 void readAllValues(){
