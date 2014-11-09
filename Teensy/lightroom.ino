@@ -8,6 +8,7 @@
 #include <EEPROM.h>
 #include "eeprom_addr.h"
 #include "EEPROMAnything.h"
+#include "cie1931.h"
 
 
 
@@ -119,8 +120,8 @@ void loop() {
         rainbow(RAINBOW_DELAY, false);
         break;
       case FIXED_COLOR:
-        setOneColor(pixels.Color(FIXED_RED, FIXED_GREEN, FIXED_BLUE));
-        delay(5);
+        setOneColor(pixels.Color(cie[FIXED_RED], cie[FIXED_GREEN], cie[FIXED_BLUE]));
+        delay(25);
         break;
       case STROBE:
         setOneColor(COLOR_WHITE);
@@ -236,7 +237,7 @@ void rainbow(int wait, bool setAll) {
         pixels.setPixelColor(i, Wheel(j));
       }
       else {
-        pixels.setPixelColor(i, Wheel(((i * 256 / NEO_PIXEL_COUNT) + j) & 255));
+        pixels.setPixelColor(i, Wheel(((i * 256 / NEO_PIXEL_COUNT) + j) % 255));
       }
     }
 
