@@ -74,7 +74,12 @@ $(document).on("pageinit","#pageone",function(){
             $.post(api_url + '/rgb', JSON.stringify(rgb));
         }
     });
-    $("#pickerDiv").hide();
+
+    if ($("#modeDropdown").val() == "4") {
+        $("#pickerDiv").show();
+    } else {
+        $("#pickerDiv").hide();
+    }
 
     if ($("#connectionStatusData").data().value == 'True') {
         $("#connectionStatusTrue").show();
